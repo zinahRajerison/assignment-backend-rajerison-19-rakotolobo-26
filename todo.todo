@@ -1,0 +1,27 @@
+A faire pour bdd:
+creation base dans MongoDB
+- creation collection user(nom, prenom , login, mdp, photo,profil, token )
+- collection matiere(id, nom,image, user)
+- creation collection assignment
+   id: Number,
+    dateDeRendu: Date,
+    nom: String,
+    rendu: Boolean
+    Auteur (nom ou photo de l'élève) user
+    Matière (Base de données, Technologies Web, Grails, etc.)
+    Note sur 20, on ne peut marquer "rendu" un Assignment qui n'a pas été noté.
+    Remarques
+
+Fonctionnalite 0: Connexion
+JWT
+
+Fonctionnalites 1: CRUD
+-liste de tous les assignments=> lien vers details
+
+Fonctionnalite 2: rendre un assignment
+drag n drop
+
+Fonctionnalite 3: saisie avec stepper
+-saisie avec liste deroulante des fk
+
+Fonctionnalite 4: Toolbar / SideBar

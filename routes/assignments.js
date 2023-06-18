@@ -1,4 +1,6 @@
 let Assignment = require('../model/assignment');
+var jwt = require('jsonwebtoken');
+var config = require('../config');
 
 // Récupérer tous les assignments (GET)
 function getAssignmentsSansPagination(req, res){

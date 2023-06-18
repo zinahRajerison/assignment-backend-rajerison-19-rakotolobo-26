@@ -1,4 +1,8 @@
 let matiere = require('../model/matiere');
+
+var jwt = require('jsonwebtoken');
+var config = require('../config');
+
 function createnew(req, res){
     var token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });

@@ -31,7 +31,7 @@ function register(req, res){
 }
 function signUp(req, res){
     user.findOne({
-        login: req.body.login
+        login: req.body.login,
     }).then((user) => { 
         if (!user) return res.status(404).send('No user found.');
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
@@ -40,8 +40,8 @@ function signUp(req, res){
         var token = jwt.sign({ id: user._id }, config.secret, {
         expiresIn: 86400 // expires in 24 hours
         });
-        
-        res.status(200).send({ auth: true, token: token });
+        user.password = undefined;
+        res.status(200).send({ auth: true, token: token ,user:user});
       })
       .catch((err) => {
         console.log(err)

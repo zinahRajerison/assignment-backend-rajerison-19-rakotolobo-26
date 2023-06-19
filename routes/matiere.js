@@ -1,4 +1,4 @@
-let matiere = require('../model/matiere');
+let matiere = require('../model/Matiere');
 
 var jwt = require('jsonwebtoken');
 var config = require('../config');

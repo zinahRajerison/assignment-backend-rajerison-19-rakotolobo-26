@@ -1,4 +1,4 @@
-let user = require('../model/user');
+let user = require('../model/User');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');

@@ -2,6 +2,7 @@ let Assignment = require('../model/assignment');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 let Matiere = require('../model/Matiere');
+const mongoose = require('mongoose');
 
 // Récupérer tous les assignments (GET)
 function getAssignmentsSansPagination(req, res){
@@ -28,6 +29,19 @@ function getAssignments(req, res) {
       if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         var aggregateQuery = Assignment.aggregate();
         
+        aggregateQuery.lookup({
+            from: "users",
+            localField: "id_auteur",
+            foreignField: "_id",
+            as: "auteur",
+        });
+
+        aggregateQuery.lookup({
+            from: "matieres",
+            localField: "id_matiere",
+            foreignField: "_id",
+            as: "matiere",
+        });
         Assignment.aggregatePaginate(aggregateQuery,
         {
             page: parseInt(req.query.page) || 1,
@@ -52,10 +66,65 @@ function getAssignment(req, res){
       if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         let assignmentId = req.params.id;
 
-        Assignment.findOne({_id: assignmentId}, (err, assignment) =>{
-            if(err){res.send(err)}
-            res.json(assignment);
-        })
+        // Assignment.aggregate()
+        // .lookup({
+        //     from: "users",
+        //     localField: "id_auteur",
+        //     foreignField: "_id",
+        //     as: "auteur",
+        // })
+        // .lookup({
+        //     from: "matieres",
+        //     localField: "id_matiere",
+        //     foreignField: "_id",
+        //     as: "matiere",
+        // })
+        // .findOne({_id: assignmentId}, (err, assignment) =>{
+        //     if(err){res.send(err)}
+        //     res.json(assignment);
+        // })
+
+        Assignment.aggregate([
+            {
+                $match: {
+                    _id: mongoose.Types.ObjectId(assignmentId)
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "id_auteur",
+                    foreignField: "_id",
+                    as: "auteur"
+                }
+            },
+            {
+                $lookup: {
+                    from: "matieres",
+                    localField: "id_matiere",
+                    foreignField: "_id",
+                    as: "matiere"
+                }
+            }
+        ], (err, result) => {
+            if (err) {
+                res.send(err);
+            } else {
+                console.log(result);
+                const assignment = result[0];
+                const auteur = assignment.auteur[0];
+                const matiere = assignment.matiere[0];
+                const response = {
+                    assignment: assignment,
+                    auteur: auteur,
+                    matiere: matiere
+                };
+                console.log(response.assignment);
+                console.log(response.auteur);
+                console.log(response.matiere);
+                res.json(response);
+            }
+        });
     })
 }
 

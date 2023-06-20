@@ -7,8 +7,14 @@ let AssignmentSchema = Schema({
     dateDeRendu : Date,
     sujet: String,
     rendu: Boolean,
-    id_auteur: String,
-    id_matiere: String,
+    id_auteur: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+    },
+    id_matiere: {
+        type: Schema.Types.ObjectId,
+        ref: "matieres",
+    },
     note: Number,
     remarques: String,
 });

@@ -34,8 +34,25 @@ Le site contient un menu de navigation deroulant donnant un choix sur `La liste 
 - Username `Claude` Password `1234`
 - Username `Julie` Password `1234`
 
+
 ### Base de donnees
+
 - Ajout de nouvelles proprietes aux modeles
+
+
+### Installation et lancement sur machine
+
+Cloner les repositories github
+- frontend : https://github.com/zinahRajerison/assignment-frontend-rajerison-19-rakotolobo-26.git
+- backend : https://github.com/zinahRajerison/assignment-backend-rajerison-19-rakotolobo-26.git
+
+- Lancer `npm install` dans les deux projets
+- Lancer `node server.js` dans le backend
+- Lancer `ng serve` dans le frontend
+
+**REMARQUE** 
+Si vous voulez tout lancer en local, il faudra changer `export const base_url = "https://assignment-backend-19-26.onrender.com/api";` en `export const base_url = "http://localhost:8010/api";` dans le fichier `src/environments/environment.ts` du projet frontend.
+
 
 ## Liens des sites
 Front : https://assignment-frontend-19-26.onrender.com/

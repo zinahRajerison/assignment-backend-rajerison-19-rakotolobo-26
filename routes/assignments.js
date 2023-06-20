@@ -258,18 +258,18 @@ function findAssignmentForAdmin(req,res){
                                 return res.status(200).send(ret);
                             })
                             .catch(err => {
-                                return res.status(400).send(err);
+                                return res.send(err);
                             });
                     })
                     .catch(err => {
-                        return res.status(400).send(err);
+                        return res.send(err);
                     });
             } catch (err) {
-                return res.status(400).send(err);
+                return res.send(err);
             }
 
         }).catch((err)=>{
-            return res.status(400).send(err)
+            return res.send(err)
         })
 
         

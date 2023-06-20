@@ -112,17 +112,8 @@ function getAssignment(req, res){
             } else {
                 console.log(result);
                 const assignment = result[0];
-                const auteur = assignment.auteur[0];
-                const matiere = assignment.matiere[0];
-                const response = {
-                    assignment: assignment,
-                    auteur: auteur,
-                    matiere: matiere
-                };
-                console.log(response.assignment);
-                console.log(response.auteur);
-                console.log(response.matiere);
-                res.json(response);
+                console.log(assignment);
+                res.json(assignment);
             }
         });
     })

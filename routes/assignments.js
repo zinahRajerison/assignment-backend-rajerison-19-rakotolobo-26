@@ -188,33 +188,90 @@ function deleteAssignment(req, res) {
         })
     })
 }
+
+async function renduNonRendu(matiere, rendu) {
+    try {
+        return await Assignment.aggregate([
+            {
+                $match: {
+                    id_matiere: matiere._id,
+                    rendu: rendu
+                }
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "id_auteur",
+                    foreignField: "_id",
+                    as: "auteur"
+                }
+            },
+            {
+                $lookup: {
+                    from: "matieres",
+                    localField: "id_matiere",
+                    foreignField: "_id",
+                    as: "matiere"
+                }
+            }
+        ]).exec();
+    } catch (err) {
+        throw err;
+    }
+}
+
 function findAssignmentForAdmin(req,res){
     var token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
     
     jwt.verify(token, config.secret, function(err, decoded) {
-      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
         Matiere.findOne({id_user:req.query.id_user}).then((matiere)=>{
             
             console.log(matiere._id)
-        Assignment.find({id_matiere:matiere._id,rendu:false}).then((devPasRendu)=>{
-            var ret={
-                pasrendu:devPasRendu
+            // Assignment.find({id_matiere:matiere._id,rendu:false}).then((devPasRendu)=>{
+            //     var ret={
+            //         pasrendu:devPasRendu
+            //     }
+                
+            //     console.log(ret)
+            //     Assignment.find({id_matiere:matiere._id,rendu:true}).then((devRendu)=>{
+            //             ret.rendu=devRendu
+            //             return res.status(200).send(ret)  
+            //     }).catch((err)=>{
+            //         return res.status(500).send("Connexion error")
+            //     })
+            // }).catch((err)=>{
+            //     return res.status(500).send("Connexion error")
+            // })
+
+            try {
+                renduNonRendu(matiere, false)
+                    .then(devPasRendu => {
+                        renduNonRendu(matiere, true)
+                            .then(devRendu => {
+                                var ret = {
+                                    pasrendu: devPasRendu,
+                                    rendu: devRendu
+                                };
+                                console.log(ret);
+                                return res.status(200).send(ret);
+                            })
+                            .catch(err => {
+                                return res.status(400).send(err);
+                            });
+                    })
+                    .catch(err => {
+                        return res.status(400).send(err);
+                    });
+            } catch (err) {
+                return res.status(400).send(err);
             }
-            
-            console.log(ret)
-            Assignment.find({id_matiere:matiere._id,rendu:true}).then((devRendu)=>{
-                    ret.rendu=devRendu
-                    return res.status(200).send(ret)  
-            }).catch((err)=>{
-                return res.status(500).send("Connexion error")
-            })
+
         }).catch((err)=>{
-            return res.status(500).send("Connexion error")
+            return res.status(400).send(err)
         })
-      }).catch((err)=>{
-        return res.status(400).send(err)
-      })
+
         
     })
 }

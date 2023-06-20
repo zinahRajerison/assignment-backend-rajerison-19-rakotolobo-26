@@ -1,6 +1,7 @@
 let Assignment = require('../model/assignment');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
+let Matiere = require('../model/Matiere');
 
 // Récupérer tous les assignments (GET)
 function getAssignmentsSansPagination(req, res){
@@ -127,7 +128,37 @@ function deleteAssignment(req, res) {
         })
     })
 }
+function findAssignmentForAdmin(req,res){
+    var token = req.headers['x-access-token'];
+    if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+    
+    jwt.verify(token, config.secret, function(err, decoded) {
+      if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        Matiere.findOne({id_user:req.query.id_user}).then((matiere)=>{
+            
+            console.log(matiere._id)
+        Assignment.find({id_matiere:matiere._id,rendu:false}).then((devPasRendu)=>{
+            var ret={
+                pasrendu:devPasRendu
+            }
+            
+            console.log(ret)
+            Assignment.find({id_matiere:matiere._id,rendu:true}).then((devRendu)=>{
+                    ret.rendu=devRendu
+                    return res.status(200).send(ret)  
+            }).catch((err)=>{
+                return res.status(500).send("Connexion error")
+            })
+        }).catch((err)=>{
+            return res.status(500).send("Connexion error")
+        })
+      }).catch((err)=>{
+        return res.status(400).send(err)
+      })
+        
+    })
+}
 
 
 
-module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment };
+module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment , findAssignmentForAdmin};

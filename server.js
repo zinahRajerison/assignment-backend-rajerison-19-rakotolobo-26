@@ -65,6 +65,9 @@ app.route(prefix +'/matiere')
   .post(matiere.createnew)
   .get(matiere.getMatieres);
 
+app.route(prefix +'/assignmentAdmin')
+  .get(assignment.findAssignmentForAdmin);
+
 // On démarre le serveur
 app.listen(port, "0.0.0.0");
 console.log('Serveur démarré sur http://localhost:' + port);

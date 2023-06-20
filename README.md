@@ -28,7 +28,7 @@ Le site contient un menu de navigation deroulant donnant un choix sur `La liste 
 ### Donnees de test
 
 #### Enseignant (Admin):
-- Username `Smith` Password `1234` Matiere `Big Data`
+- Username `MichelBuffa` Password `mdpZinah` Matiere `Angular`
 
 #### Etudiant:
 - Username `Claude` Password `1234`
